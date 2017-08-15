@@ -40,7 +40,17 @@ $(document).ready(function() {
         $activityChoices.append(`<option>${activityObj.name}</option>`)
     })
 
+    $('.hotel-group button').on('click', function() {
+        let $hotelSpan = $('#hotel-itinerary').has('span');
+        if ($hotelSpan.length) {
+            $('#hotel-itinerary .title').text($('#hotel-choices').val());
+        }
+        else {
+            $('#hotel-itinerary').append(`<span class="title">${
+                $('#hotel-choices').val()
+            }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
+        }
+    })
+
 
 });
-
-
