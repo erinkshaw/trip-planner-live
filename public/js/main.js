@@ -15,6 +15,7 @@ function initialize_gmaps() {
     var marker = new google.maps.Marker({
         position: myLatlng,
         title:"Hello World!"
+        //PLACEHOLDER
     });
     // Add the marker to the map by calling setMap()
     marker.setMap(map);
@@ -22,4 +23,24 @@ function initialize_gmaps() {
 
 $(document).ready(function() {
     initialize_gmaps();
+
+    var $hotelChoices = $('#hotel-choices')
+
+    hotels.forEach(function(hotelObj) {
+        $hotelChoices.append(`<option>${hotelObj.name}</option>`)
+    })
+
+    var $restaurantChoices = $('#restaurant-choices')
+        restaurants.forEach(function(restaurantObj) {
+            $restaurantChoices.append(`<option>${restaurantObj.name}</option>`)
+        })
+
+    var $activityChoices = $('#activity-choices')
+    activities.forEach(function(activityObj) {
+        $activityChoices.append(`<option>${activityObj.name}</option>`)
+    })
+
+
 });
+
+
