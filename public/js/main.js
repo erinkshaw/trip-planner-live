@@ -43,6 +43,13 @@ $(document).ready(function () {
         $activityChoices.append(`<option data-lat=${activityObj.place.location[0]} data-lng=${activityObj.place.location[1]}>${activityObj.name}</option>`)
     })
 
+    $('.remove').on('click', function () {
+        // $(this).siblings().remove();
+        // $(this).remove();
+        console.log('SMOETHIGN');
+    })
+
+
     $('.hotel-group button').on('click', function () {
         let $hotelSpan = $('#hotel-itinerary').has('span');
         let lat = $('#hotel-choices').find(':selected').data('lat');
@@ -81,6 +88,7 @@ $(document).ready(function () {
 
         restaurantMarker.setMap(map)
     });
+
 
     $('.activity-group button').on('click', function () {
         let lat = $('#activity-choices').find(':selected').data('lat');
