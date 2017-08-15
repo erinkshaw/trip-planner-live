@@ -1,6 +1,6 @@
 function initialize_gmaps() {
     // initialize new google maps LatLng object
-    var myLatlng = new google.maps.LatLng(40.705189,-74.009209);
+    var myLatlng = new google.maps.LatLng(40.705189, -74.009209);
     // set the map options hash
     var mapOptions = {
         center: myLatlng,
@@ -14,33 +14,33 @@ function initialize_gmaps() {
     // Add the marker to the map
     var marker = new google.maps.Marker({
         position: myLatlng,
-        title:"Hello World!"
+        title: "Hello World!"
         //PLACEHOLDER
     });
     // Add the marker to the map by calling setMap()
     marker.setMap(map);
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     initialize_gmaps();
 
     var $hotelChoices = $('#hotel-choices')
 
-    hotels.forEach(function(hotelObj) {
+    hotels.forEach(function (hotelObj) {
         $hotelChoices.append(`<option>${hotelObj.name}</option>`)
     })
 
     var $restaurantChoices = $('#restaurant-choices')
-        restaurants.forEach(function(restaurantObj) {
-            $restaurantChoices.append(`<option>${restaurantObj.name}</option>`)
-        })
+    restaurants.forEach(function (restaurantObj) {
+        $restaurantChoices.append(`<option>${restaurantObj.name}</option>`)
+    })
 
     var $activityChoices = $('#activity-choices')
-    activities.forEach(function(activityObj) {
+    activities.forEach(function (activityObj) {
         $activityChoices.append(`<option>${activityObj.name}</option>`)
     })
 
-    $('.hotel-group button').on('click', function() {
+    $('.hotel-group button').on('click', function () {
         let $hotelSpan = $('#hotel-itinerary').has('span');
         if ($hotelSpan.length) {
             $('#hotel-itinerary .title').text($('#hotel-choices').val());
@@ -48,9 +48,20 @@ $(document).ready(function() {
         else {
             $('#hotel-itinerary').append(`<span class="title">${
                 $('#hotel-choices').val()
-            }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
+                }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
         }
     })
 
+    $('.restaurant-group button').on('click', function () {
+        $('#restaurant-itinerary').append(`<span class="title">${
+            $('#restaurant-choices').val()
+            }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
+    });
+
+    $('.activity-group button').on('click', function () {
+        $('#activity-itinerary').append(`<span class="title">${
+            $('#activity-choices').val()
+            }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
+    });
 
 });
