@@ -10,7 +10,7 @@ function initialize_gmaps() {
     // set the map options hash
     var mapOptions = {
         center: myLatlng,
-        zoom: 16,
+        zoom: 14,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     // get the maps div's HTML obj
@@ -63,8 +63,10 @@ $(document).ready(function () {
     })
 
     $('.itinerary-item').on('click', 'button', function () {
-        $(this).siblings().remove();
+        let removeMarkerId = $(this).data('markerid');
+        $(this).prev().remove();
         $(this).remove();
+        markers[removeMarkerId].setMap(null);
     })
 
 
@@ -84,8 +86,7 @@ $(document).ready(function () {
     });
 
     $('.restaurant-group button').on('click', function () {
-        markerId = $('#hotel-choices').find(':selected').data('markerid');
-        console.log(markerId);
+        markerId = $('#restaurant-choices').find(':selected').data('markerid');
         $('#restaurant-itinerary').append(`<span class="title">${$('#restaurant-choices').val()}</span><button class="btn btn-xs btn-danger remove btn-circle" data-markerid=${markerId}>x</button>`)
 
         markers[markerId].setMap(map);
@@ -93,19 +94,24 @@ $(document).ready(function () {
 
 
     $('.activity-group button').on('click', function () {
-        let lat = $('#activity-choices').find(':selected').data('lat');
-        let lng = $('#activity-choices').find(':selected').data('lng');
+        markerId = $('#activity-choices').find(':selected').data('markerid');
+        $('#activity-itinerary').append(`<span class="title">${$('#activity-choices').val()}</span><button class="btn btn-xs btn-danger remove btn-circle" data-markerid=${markerId}>x</button>`)
 
-        var activityMarker = new google.maps.Marker({
-            position: new google.maps.LatLng(lat, lng),
-            title: $('#activity-choices').val()
-        });
-
-        $('#activity-itinerary').append(`<span class="title">${
-            $('#activity-choices').val()
-            }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
-
-        activityMarker.setMap(map)
+        markers[markerId].setMap(map);
     });
+
+    var dayCounter = 1
+    $('#day-add').on('click', function() {
+        dayCounter++
+       $(this).before(`<button class="btn btn-circle day-btn day-numbers">${dayCounter}</button>`)
+    });
+
+    $('.day-buttons').on('click', '.day-numbers', function(){
+        var whichDay = $(this).text()
+        $('.current-day').removeClass('current-day');
+        $(this).addClass('current-day');
+        $('#day-title span').text(`Day ${whichDay}`);
+    })
+
 
 });
