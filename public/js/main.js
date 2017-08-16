@@ -1,4 +1,7 @@
 let map;
+let markers = [];
+let marker, markerId;
+let counter = 0;
 
 function initialize_gmaps() {
     // initialize new google maps LatLng object
@@ -14,79 +17,78 @@ function initialize_gmaps() {
     var map_canvas_obj = document.getElementById("map-canvas");
     // initialize a new Google Map with the options
     map = new google.maps.Map(map_canvas_obj, mapOptions);
-    // Add the marker to the map
-    var marker = new google.maps.Marker({
-        position: myLatlng,
-        title: "Hello World!"
-        //PLACEHOLDER
-    });
+    // initialize new google maps LatLng object
+    // var marker = new google.maps.Marker({
+    //     position: myLatlng,
+    //     title: "Hello World!"
+    // });
     // Add the marker to the map by calling setMap()
-    marker.setMap(map);
+//    marker.setMap(map);
 }
 
 $(document).ready(function () {
     initialize_gmaps();
 
     var $hotelChoices = $('#hotel-choices')
-
     hotels.forEach(function (hotelObj) {
-        $hotelChoices.append(`<option data-lat=${hotelObj.place.location[0]} data-lng=${hotelObj.place.location[1]}>${hotelObj.name}</option>`)
-    })
+        $hotelChoices.append(`<option data-markerid=${counter}>${hotelObj.name}</option>`);
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(hotelObj.place.location[0], hotelObj.place.location[1]),
+            title: hotelObj.name
+       });
+       markers.push(marker);
+       counter++;
+    });
 
     var $restaurantChoices = $('#restaurant-choices')
     restaurants.forEach(function (restaurantObj) {
-        $restaurantChoices.append(`<option data-lat=${restaurantObj.place.location[0]} data-lng=${restaurantObj.place.location[1]}>${restaurantObj.name}</option>`)
+        $restaurantChoices.append(`<option data-markerid=${counter}>${restaurantObj.name}</option>`);
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(restaurantObj.place.location[0], restaurantObj.place.location[1]),
+            title: restaurantObj.name
+       });
+       markers.push(marker);
+       counter++;
     })
 
     var $activityChoices = $('#activity-choices')
     activities.forEach(function (activityObj) {
-        $activityChoices.append(`<option data-lat=${activityObj.place.location[0]} data-lng=${activityObj.place.location[1]}>${activityObj.name}</option>`)
+        $activityChoices.append(`<option data-markerid=${counter}>${activityObj.name}</option>`)
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(activityObj.place.location[0], activityObj.place.location[1]),
+            title: activityObj.name
+       });
+       markers.push(marker);
+       counter++;
     })
 
-    $('.remove').on('click', function () {
-        // $(this).siblings().remove();
-        // $(this).remove();
-        console.log('SMOETHIGN');
+    $('.itinerary-item').on('click', 'button', function () {
+        $(this).siblings().remove();
+        $(this).remove();
     })
 
 
-    $('.hotel-group button').on('click', function () {
+    $('.hotel-group').on('click', '.btn-primary', function () {
         let $hotelSpan = $('#hotel-itinerary').has('span');
-        let lat = $('#hotel-choices').find(':selected').data('lat');
-        let lng = $('#hotel-choices').find(':selected').data('lng');
-
-
-        var hotelMarker = new google.maps.Marker({
-            position: new google.maps.LatLng(lat, lng),
-            title: $('#hotel-choices').val()
-        });
-
+        markerId = $('#hotel-choices').find(':selected').data('markerid');
         if ($hotelSpan.length) {
-            $('#hotel-itinerary .title').text($('#hotel-choices').val());
-            hotelMarker.setMap(null)
+            let prevMarkerId = $('#hotel-itinerary button').data('markerid');
+            $('#hotel-itinerary span').replaceWith(`<span class="title">${$('#hotel-choices').val()}</span>`);
+            $('#hotel-itinerary button').replaceWith(`<button class="btn btn-xs btn-danger remove btn-circle" data-markerid=${markerId}>x</button>`);
+            markers[prevMarkerId].setMap(null);
         }
         else {
-            $('#hotel-itinerary').append(`<span class="title">${
-                $('#hotel-choices').val()
-            }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
+            $('#hotel-itinerary').append(`<span class="title">${$('#hotel-choices').val()}</span><button class="btn btn-xs btn-danger remove btn-circle" data-markerid=${markerId}>x</button>`)
         }
-        hotelMarker.setMap(map)
-    })
+        markers[markerId].setMap(map);
+    });
 
     $('.restaurant-group button').on('click', function () {
-        let lat = $('#restaurant-choices').find(':selected').data('lat');
-        let lng = $('#restaurant-choices').find(':selected').data('lng');
+        markerId = $('#hotel-choices').find(':selected').data('markerid');
+        console.log(markerId);
+        $('#restaurant-itinerary').append(`<span class="title">${$('#restaurant-choices').val()}</span><button class="btn btn-xs btn-danger remove btn-circle" data-markerid=${markerId}>x</button>`)
 
-        var restaurantMarker = new google.maps.Marker({
-            position: new google.maps.LatLng(lat, lng),
-            title: $('#restaurant-choices').val()
-        });
-
-        $('#restaurant-itinerary').append(`<span class="title">${
-            $('#restaurant-choices').val()
-            }</span><button class="btn btn-xs btn-danger remove btn-circle">x</button>`)
-
-        restaurantMarker.setMap(map)
+        markers[markerId].setMap(map);
     });
 
 
